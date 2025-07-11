@@ -24,6 +24,11 @@ class AMyGameCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
+public:
+
+	/** Constructor */
+	AMyGameCharacter();	
+
 	/** Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* CameraBoom;
@@ -31,7 +36,7 @@ class AMyGameCharacter : public ACharacter
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
-	
+
 protected:
 
 	UPROPERTY(EditDefaultsOnly, Category="Input")
@@ -52,10 +57,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input")
 	UInputAction* MouseLookAction;
 
-public:
+	/** Primary attack Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input")
+	UInputAction* PrimaryAttackAction;
 
-	/** Constructor */
-	AMyGameCharacter();	
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AActor> ProjectileClass;
 
 protected:
 
@@ -70,6 +77,8 @@ protected:
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
+
+	void PrimaryAttack();
 
 public:
 

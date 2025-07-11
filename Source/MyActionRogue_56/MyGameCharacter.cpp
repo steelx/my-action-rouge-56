@@ -83,6 +83,9 @@ void AMyGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMyGameCharacter::Look);
+
+		// Attacking
+		EnhancedInputComponent->BindAction(PrimaryAttackAction, ETriggerEvent::Started, this, &AMyGameCharacter::PrimaryAttack);
 	}
 	else
 	{
@@ -148,4 +151,14 @@ void AMyGameCharacter::DoJumpEnd()
 {
 	// signal the character to stop jumping
 	StopJumping();
+}
+
+void AMyGameCharacter::PrimaryAttack()
+{
+	const FVector HandLocation = GetMesh()->GetSocketLocation("HandGrip_R");
+	const FTransform SpawnTransform = FTransform(GetControlRotation(), HandLocation);
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	SpawnParams.Instigator = this;
+	GetWorld()->SpawnActor<AActor>(ProjectileClass, SpawnTransform, SpawnParams);
 }
