@@ -21,7 +21,7 @@ AMagicProjectile::AMagicProjectile()
 	SphereComp->SetCollisionObjectType(ECC_WorldDynamic);
 	SphereComp->SetCollisionResponseToAllChannels(ECR_Ignore);
 	SphereComp->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
-	SphereComp->SetCollisionResponseToChannel(ECC_PhysicsBody, ECR_Overlap);
+	SphereComp->SetCollisionResponseToChannel(ECC_PhysicsBody, ECR_Block);// e.g. Explosive Barrel
 	SphereComp->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
 
 	EffectComp = CreateDefaultSubobject<UParticleSystemComponent>("EffectComp");
@@ -47,7 +47,7 @@ void AMagicProjectile::BeginPlay()
 	   * Behavior: They are set to BLOCK everything, including your WorldDynamic projectile.
 	   * Efficiency: Generate Overlap Events is OFF. This is the key to good performance. The world doesn't need to do extra work; it just needs to be a solid barrier.
 
-	 2. The Characters (`Pawn`) and Physics Objects (`PhysicsBody`) ECC_Pawn & ECC_PhysicsBody = ECR_Overlap
+	 2. The Characters (`Pawn`) ECC_Pawn = ECR_Overlap
 	   * Identity: Their Object Types are Pawn and PhysicsBody.
 	   * Behavior: They are configured to OVERLAP with your WorldDynamic projectile.
 	   * The "Magic" Checkbox: Generate Overlap Events is ON for these specific objects. This is perfectly fine and efficient because, as you noted, there are only a few of them.
@@ -76,7 +76,7 @@ void AMagicProjectile::OnActorOverlap(UPrimitiveComponent* OverlappedComponent, 
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Overlapped with %s"), *OtherActor->GetName());
 		// draw debug sphere
-		DrawDebugSphere(GetWorld(), GetActorLocation(), 20.0f, 32, FColor::Red, false, 2.0f);
+		DrawDebugSphere(GetWorld(), GetActorLocation(), 20.0f, 16, FColor::Red, false, 2.0f);
 		Destroy();
 	}
 }
@@ -95,7 +95,7 @@ void AMagicProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, U
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Hit with %s"), *OtherActor->GetName());
 		// draw debug sphere
-		DrawDebugSphere(GetWorld(), GetActorLocation(), 20.0f, 32, FColor::Red, false, 2.0f);
+		DrawDebugSphere(GetWorld(), GetActorLocation(), 20.0f, 16, FColor::Cyan, false, 2.0f);
 		Destroy();
 	}
 }
